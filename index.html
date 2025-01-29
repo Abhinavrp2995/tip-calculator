@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tip Calculator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <style>
       body {
         background-color: #FFDEE9;
@@ -31,22 +32,29 @@
               <input type="number" class="form-control" id="tipPercentage" placeholder="Enter tip percentage">
             </div>
             <div class="mb-3">
-                <button type="button" class="btn btn-secondary mt-3" onclick="setTip(5)">5%</button>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown button
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item active" href="#" onclick="setTip(5)">5%</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="setTip(10)">10%</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="setTip(20)">20%</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="setTip(25)">25%</a></li>
+                </ul>
+              </div>
+                <!-- <button type="button" class="btn btn-secondary mt-3" onclick="setTip(5)">5%</button>
                 <button type="button" class="btn btn-secondary mt-3" onclick="setTip(10)">10%</button>
                 <button type="button" class="btn btn-secondary mt-3" onclick="setTip(15)">15%</button>
                 <button type="button" class="btn btn-secondary mt-3" onclick="setTip(20)">20%</button>
-                <button type="button" class="btn btn-secondary mt-3" onclick="setTip(25)">25%</button>
-            </div>
-            <div class="mb-3">
-              <label for="numPeople" class="form-label">Number of People</label>
-              <input type="number" class="form-control" id="numPeople" placeholder="Enter number of people">
+                <button type="button" class="btn btn-secondary mt-3" onclick="setTip(25)">25%</button> -->
             </div>
             <div class="d-flex justify-content-evenly mt-3">
               <button type="button" class="btn btn-primary" onclick="calculateTip()">CALCULATE</button>
               <button type="button" class="btn btn-warning" onclick="resetCalculator()">RESET</button>
             </div>
             <h4 class="mt-5">Tip Amount: <span id="tipAmount">0.00</span></h4>
-            <h4>Total Per Person: <span id="totalPerPerson">0.00</span></h4>
+            <h4>Total Bill Amount: <span id="totalBillAmount">0.00</span></h4>
         </form>
         </div>
         <div class="col-md-4"></div>
@@ -54,48 +62,43 @@
    </div> 
 
    <script>
-    // Function to set the tip percentage
     function setTip(percentage) {
-        document.getElementById('tipPercentage').value = percentage;
+    document.getElementById('tipPercentage').value = percentage;
+    document.querySelector('.dropdown-toggle').textContent = percentage + "%"; // Update button text
+}
+
+// Function to calculate the tip and total per person
+function calculateTip() {
+    const billAmount = parseFloat(document.getElementById('billAmount').value);
+    const tipPercentage = parseFloat(document.getElementById('tipPercentage').value);
+
+    if (isNaN(billAmount) || billAmount <= 0) {
+        alert('Please enter a valid bill amount.');
+        return;
     }
 
-    // Function to calculate the tip and total per person
-    function calculateTip() {
-        const billAmount = parseFloat(document.getElementById('billAmount').value);
-        const tipPercentage = parseFloat(document.getElementById('tipPercentage').value);
-        const numPeople = parseInt(document.getElementById('numPeople').value);
-
-        if (isNaN(billAmount) || billAmount <= 0) {
-            alert('Please enter a valid bill amount.');
-            return;
-        }
-
-        if (isNaN(tipPercentage) || tipPercentage < 0) {
-            alert('Please enter a valid tip percentage.');
-            return;
-        }
-
-        if (isNaN(numPeople) || numPeople <= 0) {
-            alert('Please enter a valid number of people.');
-            return;
-        }
-
-        const tipAmount = (billAmount * tipPercentage) / 100;
-        const totalAmount = billAmount + tipAmount;
-        const totalPerPerson = totalAmount / numPeople;
-
-        document.getElementById('tipAmount').textContent = tipAmount.toFixed(2);
-        document.getElementById('totalPerPerson').textContent = totalPerPerson.toFixed(2);
+    if (isNaN(tipPercentage) || tipPercentage < 0) {
+        alert('Please enter a valid tip percentage.');
+        return;
     }
 
-    // Function to reset the calculator
-    function resetCalculator() {
-        document.getElementById('billAmount').value = '';
-        document.getElementById('tipPercentage').value = '';
-        document.getElementById('numPeople').value = '';
-        document.getElementById('tipAmount').textContent = '0.00';
-        document.getElementById('totalPerPerson').textContent = '0.00';
-    }
+    // Calculate tip amount and total amount
+    const tipAmount = (billAmount * tipPercentage) / 100;
+    const totalAmount = billAmount + tipAmount;
+
+    // Update values in the HTML
+    document.getElementById('tipAmount').textContent = tipAmount.toFixed(2);
+    document.getElementById('totalBillAmount').textContent = totalAmount.toFixed(2);
+}
+
+// Function to reset the calculator
+function resetCalculator() {
+    document.getElementById('billAmount').value = '';
+    document.getElementById('tipPercentage').value = '';
+    document.getElementById('tipAmount').textContent = '0.00';
+    document.getElementById('totalBillAmount').textContent = '0.00';
+    document.querySelector('.dropdown-toggle').textContent = "Dropdown button"; // Reset dropdown text
+}
    </script>
 </body>
 </html>
